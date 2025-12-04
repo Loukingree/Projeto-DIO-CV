@@ -1,383 +1,529 @@
-.<!DOCTYPE html>
-<!-- @falvojr: Reference article https://www.w3schools.com/howto/howto_website_create_resume.asp -->
-<!-- @falvojr: Useful link to use fontawesome (fa) icons: https://fontawesome.com/v4/icons/ -->
+<!DOCTYPE html>
 <html lang="pt-BR">
-
   <head>
     <title>Louy Santana</title>
-
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-      html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
-    </style>
-
-    <style>
-      .skill-item {
-        margin-bottom: 22px;
-        color: #F2F2F2;
+      /* --- CONFIGURAÇÕES GERAIS --- */
+      html, body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Roboto", sans-serif;
+      }
+      
+      /* --- NOVO CTA FIXO (COM POSICIONAMENTO CORRIGIDO) --- */
+      .cta-live {
+          position: fixed;
+          top: 15px;
+          right: 20px; /* Posição padrão para telas menores que 1440px */
+          padding: 8px 15px;
+          background-color: #FF2C8B; 
+          color: white;
+          border-radius: 8px;
+          font-weight: bold;
+          text-decoration: none;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+          transition: background-color 0.3s;
+          font-size: 14px;
+          display: none; 
       }
 
-      .skill-title {
-        font-size: 15px;
-        margin-bottom: 6px;
+      /* * CORREÇÃO PARA TELAS GRANDES (CONTENT = 1400px)
+      * A partir de 1440px de largura, o botão será fixado na borda direita do currículo.
+      */
+      @media (min-width: 1440px) {
+          .cta-live {
+              /* 50vw (centro da tela) - 700px (metade do container de 1400px) + 20px (respiro) */
+              right: calc(50vw - 700px + 20px);
+          }
+      }
+
+      /* Mantém o botão visível em telas >= 1000px */
+      @media (min-width: 1000px) {
+          .cta-live {
+              display: block;
+          }
+      }
+
+      .cta-live:hover {
+          background-color: #A855F7; 
+          color: white;
+      }
+
+      /* Animação do Fundo da Sidebar */
+      @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      /* --- SIDEBAR (COLUNA ESQUERDA) --- */
+      .left-sidebar {
+        /* Gradiente sutil e moderno (Preto -> Azul Profundo -> Roxo Escuro) */
+        background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #100e17);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite; /* Animação lenta e elegante */
+        
+        color: #E0E0E0 !important; /* Texto off-white (menos agressivo que branco puro) */
+        padding-bottom: 30px;
+        border-radius: 8px; /* Cantos levemente arredondados */
+      }
+      
+      /* Títulos e Ícones da Sidebar */
+      .left-sidebar h2, 
+      .left-sidebar a,
+      .left-sidebar p i { 
+        color: #ffffff !important; /* Títulos mantêm destaque */
+        text-shadow: 0 0 10px rgba(168, 85, 247, 0.3); /* Leve brilho neon no texto */
+      }
+
+      .left-sidebar p, .left-sidebar span, .skill-description {
+        color: #d1d5db !important; /* Cinza suave para leitura */
+      }
+
+      .left-sidebar hr {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Hover nos Links da Sidebar */
+      .left-sidebar a { text-decoration: none; transition: 0.3s; }
+      .left-sidebar a:hover { color: #A855F7 !important; transform: translateX(5px); display: inline-block; }
+
+      /* Ajuste nos ícones de contato */
+      .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .contact-item i {
+        margin-right: 10px;
+        font-size: 18px;
+        width: 20px;
+        text-align: center;
+        color: #FF2C8B !important; /* Rosa Neon nos icones de contato */
+      }
+      
+      /* --- SKILLS --- */
+      .skill-item { margin-bottom: 18px; } /* Reduzido para menos espaço vertical */
+
+      .skill-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px; /* Ajuste principal: título mais próximo da barra */
       }
 
       .skill-bar {
         width: 100%;
-        height: 12px;
-        background: #1F1F27;
-        border-radius: 6px;
+        height: 8px; /* Barra mais fina e elegante */
+        background: rgba(255, 255, 255, 0.1); /* Fundo da barra semitransparente */
+        border-radius: 4px;
         overflow: hidden;
-        position: relative;
-        display: inline-block;
       }
 
       .skill-fill {
         height: 100%;
-        background: linear-gradient(90deg, #FF2C8B, #A855F7);
-        border-radius: 6px;
-        transition: width .6s ease;
+        background: linear-gradient(90deg, #FF2C8B, #A855F7); /* Gradiente Neon */
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); /* Glow na barra */
+        width: 0; 
+        animation: loadBar 1.5s ease-out forwards;
+      }
+      
+      @keyframes loadBar {
+        to { width: var(--w); }
       }
 
-      .skill-value {
-        float: right;
-        margin-top: -18px;
-        font-size: 13px;
-        color: #F2F2F2;
-        font-weight: bold;
+      .skill-value { font-size: 12px; font-weight: bold; color: #A855F7; }
+      .skill-description { margin: 4px 0 0 0; font-size: 12px; color: #B8B8B8 !important; line-height: 1.4; }
+
+
+      /* --- COLUNA DIREITA (CONTEÚDO PRINCIPAL) --- */
+      
+      /* Aumentar o respiro (Whitespace) */
+      .card-padding {
+        padding: 32px 24px !important; /* Muito mais espaço interno nos cards */
+      }
+      
+      .w3-twothird h2 {
+        color: #1a1a2e !important;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        border-bottom: 3px solid #A855F7;
+        display: inline-block;
+        padding-bottom: 8px;
+        margin-bottom: 25px; /* Espaço após o título */
       }
 
-      .skill-description {
-        margin: 4px 0 0 0;
-        font-size: 12px;
-        color: #B8B8B8;
+      .w3-twothird h2 i { color: #FF2C8B !important; }
+
+      .w3-twothird h5 {
+        font-weight: 600;
+        margin-top: 25px; /* Espaço antes de cada cargo/projeto */
+        margin-bottom: 10px;
+        font-size: 18px;
+        color: #2D3748;
+      }
+      
+      .w3-twothird p {
+        line-height: 1.8; /* Aumenta o espaçamento entre linhas (leitura fácil) */
+        color: #4A5568;
+        margin-bottom: 15px;
+        font-size: 15px;
       }
 
-      .w3-third .w3-white {
-        background-color: #0B0B11 !important;
-        color: #F2F2F2 !important;
+      /* Tags e Datas */
+      .w3-text-teal { color: #FF2C8B !important; font-weight: 500; font-size: 14px; }
+      .w3-tag.w3-teal { background-color: #A855F7 !important; font-size: 11px; letter-spacing: 0.5px; }
+
+      /* Sombras Modernas nos Cards Brancos */
+      .w3-card, .w3-card-4 {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025) !important;
+        border-radius: 12px;
+        border: 1px solid #f0f0f0;
       }
 
-      .w3-text-grey,
-      .w3-text-teal {
-        color: #F2F2F2 !important;
+      /* --- FOOTER (RODAPÉ) CONSISTENTE --- */
+      .footer-dark {
+          background-color: #1a1a2e !important; /* Cor escura próxima do sidebar */
+          color: #E0E0E0 !important;
+          padding: 20px 0;
+          border-radius: 0 0 12px 12px;
+      }
+      .footer-dark a {
+          color: #FF2C8B !important;
+          text-decoration: none;
+      }
+      .footer-dark i {
+          font-size: 24px;
+          margin: 0 10px;
+          transition: color 0.3s;
+      }
+      .footer-dark i:hover {
+          color: #A855F7 !important;
       }
     </style>
   </head>
 
-  <body class="w3-light-grey" cz-shortcut-listen="true">
+  <body class="w3-light-grey">
+    <a href="https://loukingree.github.io/Projeto-DIO-CV/" target="_blank" class="cta-live">
+      <i class="fa fa-external-link"></i> VER AO VIVO!
+    </a>
 
-    <!-- Page Container -->
     <div class="w3-content w3-margin-top" style="max-width:1400px;">
 
-      <!-- The Grid -->
       <div class="w3-row-padding">
 
-        <!-- Left Column -->
         <div class="w3-third">
-
-          <div class="w3-white w3-text-grey w3-card-4">
-            <!-- @falvojr: This container has been modified to not use a profile picture. -->
+          <div class="w3-white w3-card-4 left-sidebar">
+            
             <div class="w3-container">
-              <h2>Louy Santana Fernandes Maracaipe</h2>
+              <h2 style="margin-top: 20px;">Louy Santana Fernandes Maracaipe</h2>
             </div>
+
             <div class="w3-container">
-              <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Estudante de Análise e Desenvolvimento de Sistemas</p>
-              <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>Goiânia - Go</p>
-              <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>louysant@gmail.com</p>
-              <p><i class="fa fa-linkedin fa-fw w3-margin-right w3-large w3-text-teal"></i><a href="https://www.linkedin.com/in/louysantana/" target="_blank">https://www.linkedin.com/in/louysantana/</a></p>
-              <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i>(62) 98116-4329 (Whatsapp)</p>
+              <div class="contact-item"><i class="fa fa-briefcase"></i> Estudante de ADS</div>
+              <div class="contact-item"><i class="fa fa-home"></i> Goiânia - GO</div>
+              <div class="contact-item"><i class="fa fa-envelope"></i> louysant@gmail.com</div>
+              <div class="contact-item"><i class="fa fa-linkedin"></i> <a href="https://www.linkedin.com/in/louysantana/" target="_blank">/in/louysantana</a></div>
+              <div class="contact-item"><i class="fa fa-whatsapp"></i> (62) 98116-4329</div>
               <hr>
 
-              <p class="w3-large">
-                <b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i>Skills</b>
-              </p>
+              <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right" style="color:#FF2C8B !important"></i>Skills</b></p>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-star fa-fw w3-margin-right"></i>Metodologias Ágeis (Scrum)</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 90%;"></div>
+                <div class="skill-header">
+                  <p class="skill-title">⭐ Metodologias Ágeis (Scrum)</p>
+                  <span class="skill-value">90%</span>
                 </div>
-                <span class="skill-value">90%</span>
-                <p class="skill-description">Vivência real com dailies, backlog, reviews e interação com stakeholders.</p>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 90%"></div></div>
+                <p class="skill-description">Vivência real com dailies, backlog, reviews e stakeholders.</p>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-android fa-fw w3-margin-right"></i>Inteligência Artificial / Engenharia de Prompts</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 90%;"></div>
+                <div class="skill-header">
+                  <p class="skill-title">🤖 IA / Engenharia de Prompts</p>
+                  <span class="skill-value">90%</span>
                 </div>
-                <span class="skill-value">90%</span>
-                <p class="skill-description">Uso diário para produtividade, análise, automações e geração de conteúdo técnico.</p>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 90%"></div></div>
+                <p class="skill-description">Uso diário para produtividade, análise e geração de código.</p>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-comments fa-fw w3-margin-right"></i>Trabalho em Equipe e Comunicação</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 90%;"></div>
+                <div class="skill-header">
+                  <p class="skill-title">🗣️ Trabalho em Equipe</p>
+                  <span class="skill-value">90%</span>
                 </div>
-                <span class="skill-value">90%</span>
-                <p class="skill-description">Colaboração contínua com equipes multidisciplinares e comunicação clara.</p>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 90%"></div></div>
+                <p class="skill-description">Colaboração contínua com equipes multidisciplinares.</p>
+              </div>
+
+               <div class="skill-item">
+                <div class="skill-header">
+                  <p class="skill-title">🚀 Proatividade</p>
+                  <span class="skill-value">90%</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 90%"></div></div>
+                <p class="skill-description">Constante em bootcamps, cursos e projetos paralelos.</p>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-rocket fa-fw w3-margin-right"></i>Proatividade</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 90%;"></div>
+                <div class="skill-header">
+                  <p class="skill-title">🧪 Cypress (Automated Testing)</p>
+                  <span class="skill-value">60%</span>
                 </div>
-                <span class="skill-value">90%</span>
-                <p class="skill-description">Participação constante em bootcamps, cursos e projetos paralelos.</p>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 60%"></div></div>
+                <p class="skill-description">Fluxos automatizados e boas práticas de resiliência.</p>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-flask fa-fw w3-margin-right"></i>Cypress (Testes Automatizados)</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 60%;"></div>
+                <div class="skill-header">
+                  <p class="skill-title">🐍 Python</p>
+                  <span class="skill-value">70%</span>
                 </div>
-                <span class="skill-value">60%</span>
-                <p class="skill-description">Criação de fluxos automatizados aplicando boas práticas de resiliência.</p>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 70%"></div></div>
+                <p class="skill-description">Automação, análise de dados (Pandas) e Scikit-learn.</p>
+              </div>
+
+               <div class="skill-item">
+                <div class="skill-header">
+                    <p class="skill-title"><i class="fa fa-html5 fa-fw w3-margin-right" style="color: #E34F26;"></i>HTML5</p>
+                    <span class="skill-value">80%</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 80%"></div></div>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-code fa-fw w3-margin-right"></i>Python</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 70%;"></div>
+                <div class="skill-header">
+                    <p class="skill-title"><i class="fa fa-css3 fa-fw w3-margin-right" style="color: #1572B6;"></i>CSS3</p>
+                    <span class="skill-value">50%</span>
                 </div>
-                <span class="skill-value">70%</span>
-                <p class="skill-description">Automação, análise de dados e uso de pandas / scikit-learn.</p>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 50%"></div></div>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-html5 fa-fw w3-margin-right"></i>HTML5</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 80%;"></div>
+                <div class="skill-header">
+                    <p class="skill-title"><i class="fa fa-code fa-fw w3-margin-right" style="color: #F7DF1E;"></i>JavaScript</p>
+                    <span class="skill-value">70%</span>
                 </div>
-                <span class="skill-value">80%</span>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 70%"></div></div>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-css3 fa-fw w3-margin-right"></i>CSS3</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 50%;"></div>
-                </div>
-                <span class="skill-value">50%</span>
+                <div class="skill-header"><p class="skill-title">⚙️ GitLab CI / DevSecOps</p><span class="skill-value">40%</span></div>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 40%"></div></div>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-code fa-fw w3-margin-right"></i>JavaScript</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 70%;"></div>
-                </div>
-                <span class="skill-value">70%</span>
+                <div class="skill-header"><p class="skill-title">🔄 N8N</p><span class="skill-value">50%</span></div>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 50%"></div></div>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-cogs fa-fw w3-margin-right"></i>GitLab CI / DevSecOps</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 40%;"></div>
-                </div>
-                <span class="skill-value">40%</span>
+                <div class="skill-header"><p class="skill-title">📊 Power BI</p><span class="skill-value">60%</span></div>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 60%"></div></div>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-refresh fa-fw w3-margin-right"></i>N8N</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 50%;"></div>
+                <div class="skill-header">
+                  <p class="skill-title">🖥️ Suporte Técnico</p>
+                  <span class="skill-value">80%</span>
                 </div>
-                <span class="skill-value">50%</span>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 80%"></div></div>
+                <p class="skill-description">Montagem, manutenção e troubleshooting.</p>
               </div>
 
               <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-bar-chart fa-fw w3-margin-right"></i>Power BI</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 60%;"></div>
+                <div class="skill-header">
+                  <p class="skill-title">🎧 Atendimento ao Cliente</p>
+                  <span class="skill-value">85%</span>
                 </div>
-                <span class="skill-value">60%</span>
-              </div>
-
-              <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-desktop fa-fw w3-margin-right"></i>Suporte Técnico</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 80%;"></div>
-                </div>
-                <span class="skill-value">80%</span>
-                <p class="skill-description">Montagem, manutenção e troubleshooting de sistemas desde a infância.</p>
-              </div>
-
-              <div class="skill-item">
-                <p class="skill-title"><i class="fa fa-headphones fa-fw w3-margin-right"></i>Atendimento ao Cliente</p>
-                <div class="skill-bar">
-                  <div class="skill-fill" style="width: 85%;"></div>
-                </div>
-                <span class="skill-value">85%</span>
-                <p class="skill-description">Experiência real com empatia, comunicação e resolução de problemas.</p>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 85%"></div></div>
+                <p class="skill-description">Empatia, comunicação e resolução de problemas.</p>
               </div>
 
               <br>
               <hr>
+              
               <p class="w3-large w3-text-theme">
-                <b><i class="fa fa-globe fa-fw w3-margin-right w3-text-teal"></i>Idiomas</b>
+                <b><i class="fa fa-globe fa-fw w3-margin-right" style="color:#FF2C8B !important"></i>Idiomas</b>
               </p>
-              <p>Português</p>
-              <div class="w3-light-grey w3-round-xlarge">
-                <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div>
+              
+              <div class="skill-item">
+                <div class="skill-header"><p class="skill-title">🇧🇷 Português (Nativo)</p></div>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 100%"></div></div>
               </div>
-              <p>Inglês (Escrita, Leitura, Audição e Fala)</p>
-              <div class="w3-light-grey w3-round-xlarge">
-                <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div>
+
+              <div class="skill-item">
+                <div class="skill-header"><p class="skill-title">🇺🇸 Inglês (Full Professional)</p></div>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 100%"></div></div>
               </div>
-              <p>Francês</p>
-              <div class="w3-light-grey w3-round-xlarge">
-                <div class="w3-round-xlarge w3-teal" style="height:24px;width:10%"></div>
+
+              <div class="skill-item">
+                <div class="skill-header"><p class="skill-title">🇫🇷 Francês (Básico)</p></div>
+                <div class="skill-bar"><div class="skill-fill" style="--w: 25%"></div></div>
               </div>
+
               <br>
             </div>
           </div><br>
-
-          <!-- End Left Column -->
         </div>
-
-        <!-- Right Column -->
         <div class="w3-twothird">
 
-
-          <!-- SOBRE -->
-          <div class="w3-container w3-card w3-white w3-margin-bottom">
-            <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-terminal fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Sobre</h2>
-            <p> Sou movido pela curiosidade e pela vontade constante de explorar novas tecnologias. Tenho facilidade em me encantar com ferramentas inovadoras,
-              como o N8N, e grande interesse em me aprofundar em todas as áreas da Tecnologia da Informação. Sempre que surge uma oportunidade de aprendizado
-              — seja em bootcamps, cursos da Cisco ou outras formações — sinto o desejo de participar para expandir meus conhecimentos.
-              Meu objetivo é dominar conceitos e práticas que me permitam estar sempre na vanguarda do setor..</p>
+          <div class="w3-container w3-card w3-white w3-margin-bottom card-padding">
+              <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-terminal fa-fw w3-margin-right w3-xxlarge"></i>Sobre</h2>
+              <p>
+                  Sou movido pela <strong>curiosidade</strong> e pela vontade constante de explorar novas tecnologias, com foco em gerar <strong>Impacto</strong> através de soluções de TI. Tenho facilidade em me encantar com ferramentas inovadoras, como o <strong>N8N</strong> (que utilizo para automação de fluxos), e grande interesse em me aprofundar em todas as áreas da Tecnologia.
+              </p>
+              <p>
+                  Abordo o aprendizado com <strong>proatividade</strong> e mentalidade de <strong>Transformação</strong> contínua. Sempre que surge uma oportunidade de aprendizado — seja em bootcamps, cursos da Cisco ou outras formações — sinto o desejo de participar para expandir meus conhecimentos. Meu objetivo é dominar conceitos e práticas que me permitam estar sempre na vanguarda do setor e contribuir para entregas de valor.
+              </p>
           </div>
 
-
-          <!-- XP -->
-          <div class="w3-container w3-card w3-white w3-margin-bottom">
+          <div class="w3-container w3-card w3-white w3-margin-bottom card-padding">
             <h2 class="w3-text-grey w3-padding-16">
-              <i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Experiências
+              <i class="fa fa-rocket fa-fw w3-margin-right w3-xxlarge"></i>Inovação & Imersões
             </h2>
-
+            
             <div class="w3-container">
-              <h5 class="w3-opacity"><b>Analista de Requisitos | <a href="https://institutoverbena.ufg.br" target="_blank">Instituto Verbena</a></b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Outubro de 2025 - <span class="w3-tag w3-teal w3-round">Atual</span></h6>
-              <p>Atuo no time de Requisitos em um projeto de desenvolvimento de um sistema interno do Instituto (informações confidenciais). No meu dia a dia, elaboro Histórias de Usuário, Diagramas e Dicionários de Dados a partir da elicitação de requisitos com os stakeholders. Também desenvolvo protótipos de telas no Figma e produzo os Descritores de Casos de Teste (DCTs) utilizados nos testes funcionais, incluindo a execução desses testes.</p>
-              <p>Utilizo Figma, Google Workspace (Docs, Sheets, Drive) e GitLab para versionamento e documentação. Trabalhamos com o framework Scrum, participando de Dailies, reuniões de alinhamento, Reviews e Retrospectivas. Para organização das atividades usamos Notion, e para reuniões remotas, Google Meet.</p>
-              <p>Além das atividades principais, pesquiso e implemento testes automatizados com Cypress. Já desenvolvi fluxos automatizados do sistema e adquiri experiência na aplicação de boas práticas para garantir robustez e resiliência dos testes frente a mudanças no software.</p>
-              <hr>
-            </div>
-
-            <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.netacad.com">CISCO</a> Networking Academy - Introduction to Cybersecurity</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Setembro de 2025</h6>
-              <p>Parte do curso profissionalizante Junior Cybersecurity Analyst ministrado pela CISCO.</p>
-            </div>
-
-           <div class="w3-container">
-              <h5 class="w3-opacity"><b>Gestão de Projetos e Fundamentos de Métodos Agile</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Agosto de 2025</h6>
-              <p>Curso oferecido pela Santander Academy.</p>
-            </div>
-
-            <div class="w3-container">
-              <h5 class="w3-opacity"><b>Inteligência Artificial/Prompts/Geração de Roteiros, Imagens, Códigos</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>O TEMPO TODO</h6>
-              <p>Além de uso para produção, utilizo muito para aprender.<br>
-              Uso muito ChatGPT Plus (para produção textual), Copilot (especialmente para geração de imagens), Gemini (especialmente para aprendizado).</p>
-            </div>
-
-            <div class="w3-container">
-              <h5 class="w3-opacity"><b>2ª Imersão <a target="_blank" href="https://www.alura.com.br">Alura</a> com Google Gemini</b></h5>
-              <p>2ª Imersão em Front-End promovida e feita pela Alura em Setembro de 2024. Desenvolvemos um projeto de escolha pessoal ao longo de 5 aulas + 2 extras + desafios com premiações. <br>
-              Tecnologias Utilizadas: HTLM,  CSS,  JavaScript,  Luri(Alura IA), Github, Discord, Google Gemini <br>
-               (<a target="_blank" href="https://github.com/Loukingree/Alura-2024-Guia-de-Aprendizagem-Web-Interativo---HTML-CSS-e-JS">link do repositório com Github Pages ativo!</a>)</p>
-            </div>
-
-            <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.digitalhouse.com/br">Rockeseat</a> - Next Level Week (NLW Experts)</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de 2024 - <span class="w3-tag w3-teal w3-round">Atual</span></h6>
-              <p>NLW Expert | Evento gratuito de programação na prática promovido pela Rockeseat! <br>
-              Criamos, ao longo de 5 dias, um projeto Quiz personalizável com Prof Mayk Brito. <br>
-               (<a target="_blank" href="https://github.com/Loukingree/NLW-Experts-1-2024">link do repositório com Deploy!</a>)</p>
-              <hr>
-            </div>
-
-            <div class="w3-container">
-              <h5 class="w3-opacity"><b>1ª Imersão <a target="_blank" href="https://www.alura.com.br">Alura</a> Spotify</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de 2024</h6>
-              <p>1ª Imersão em Front-End promovida e feita pela Alura em Janeiro de 2024. Desenvolvemos uma réplica da
-              página inicial do Spotify® ao longo de 5 aulas + 2 extras + desafios . <br>
-              Tecnologias Utilizadas: HTLM  CSS  JavaScript  Luri(Alura IA) <br>
-              Além dessas, React também foi apresentado, porém, não aprofundado. <br>
-               (<a target="_blank" href="https://github.com/Loukingree/Imersao-Alura-Spotify">link do repositório com Deploy!</a>)<strong>(Projeto em fase final de desenvolvimento)</strong></p>
-            </div>
-
-            <div class="w3-container">
-              <h5 class="w3-opacity"><b>Intensivão <a target="_blank" href="https://www.hashtagtreinamentos.com/todos-os-cursos">Hashtag</a> Javascript</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de 2024</h6>
+              <h5><b>Imersão IA & Front-End (Alura + Google Gemini)</b></h5> 
               <p>
-                Uma semana de aulas promovida pela <a target="_blank" href="https://www.linkedin.com/school/hashtag-treinamentos/">Hashtag Treinamentos</a>, onde o <a target="_blank" href="https://www.linkedin.com/in/daniel-porto-1b7900165/">Daniel Porto</a> nos ensinou a desenvolver 4 projetos: Um app de AudioBook, uma Réplica de uma
-                página da AppleStore, Um Cárdapio digital para um restaurante e o "HashZap". <a target="_blank" href="https://github.com/stars/Loukingree/lists/intensivao-js-hashtag-2024">(Link da Lista de Projetos!)</a></p>
+                Participei ativamente de hackathons e imersões (bootcamps) focados em entrega rápida de valor. 
+                Utilizei ferramentas de IA Generativa para criar interfaces modernas e funcionais em tempo recorde, 
+                aplicando conceitos de <em>Rapid Prototyping</em>.
+              </p>
             </div>
-
+            
             <div class="w3-container">
-              <h5 class="w3-opacity"><b>Intensivão <a target="_blank" href="https://www.hashtagtreinamentos.com/todos-os-cursos">Hashtag</a> Python</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de 2024</h6>
-              <p>4 dias de aula, 4 projetos fantásticos. Aulas promovidas pelo professor <a target="_blank" href="https://www.linkedin.com/in/joão-paulo-rodrigues-de-lira-50664758/">João Lira</a>. <br>
-                <a target="_blank" href="https://github.com/stars/Loukingree/lists/intensivao-python-hashtag-2024">(Link dos meus projetos)</a></p>
+              <h5><b>NLW Expert (Rocketseat)</b></h5>
+              <p>
+                Desenvolvimento focado em tecnologias modernas (React/JS), experimentando novas stacks 
+                para manter a adaptabilidade técnica alta.
+              </p>
             </div>
+          </div>
+          <div class="w3-container w3-card w3-white w3-margin-bottom card-padding">
+  <h2 class="w3-text-grey w3-padding-16">
+    <i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge"></i>Experiências
+  </h2>
 
-            <div class="w3-container">
-              <h5 class="w3-opacity"><b>Intensivão <a target="_blank" href="https://www.hashtagtreinamentos.com/todos-os-cursos">Hashtag</a> Power BI</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Dezembro de 2023</h6>
-              <p>Gostei muito das aulas de Power BI com o <a target="_blank" href="https://www.linkedin.com/in/alon-pinheiro-31bb9710a/">Alon Pinheiro</a> e cheguei a comprar o
-                acesso à Comunidade Impressionadora. <br> <a target="_blank" href="https://sites.google.com/view/portfoliolouysantana/início">(Link da Lista de Dashboards!)</a></p>
-            </div>
+  <div class="w3-container">
+    <h5><b>Analista de Requisitos | <a href="https://institutoverbena.ufg.br" target="_blank">Instituto Verbena</a></b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Outubro de 2025 - <span class="w3-tag w3-teal w3-round">Atual</span></h6>
+    <p>Atuo no time de Requisitos em um projeto de desenvolvimento de um sistema interno do Instituto (informações confidenciais). No meu dia a dia, elaboro Histórias de Usuário, Diagramas e Dicionários de Dados a partir da elicitação de requisitos com os stakeholders. Também desenvolvo protótipos de telas no Figma e produzo os Descritores de Casos de Teste (DCTs) utilizados nos testes funcionais, incluindo a execução desses testes.</p>
+    <p>Utilizo Figma, Google Workspace (Docs, Sheets, Drive) e GitLab para versionamento e documentação. Trabalhamos com o framework Scrum, participando de Dailies, reuniões de alinhamento, Reviews e Retrospectivas. Para organização das atividades usamos Notion, e para reuniões remotas, Google Meet.</p>
+    <p>Além das atividades principais, pesquiso e implemento testes automatizados com Cypress. Já desenvolvi fluxos automatizados do sistema e adquiri experiência na aplicação de boas práticas para garantir robustez e resiliência dos testes frente a mudanças no software.</p>
+    <hr>
+  </div>
 
-            <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.lojasrenner.com.br">Renner S.A.</a></b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2019</h6>
-              <p>Assistente de Loja (eEStágio de 4 meses).</p>
-            </div>
+  <div class="w3-container">
+    <h5><b><a target="_blank" href="https://www.netacad.com">CISCO</a> Networking Academy - Introduction to Cybersecurity</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Setembro de 2025</h6>
+    <p>Parte do curso profissionalizante Junior Cybersecurity Analyst ministrado pela CISCO.</p>
+  </div>
 
-           <div class="w3-container">
-              <h5 class="w3-opacity"><b>Atendimento ao Cliente</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Várias Experiências</h6>
-              <p>Já trabalhei em supermercados, shopping center, com pintura e restauração (em França),<br>
-              e, nesse sentido, sempre consigo me conectar com o cliente criando uma relação de respeito mútuo e empatia.<br>
-              de forma que eu possa atendê-lo plenamente.</p>
-            </div>
+  <div class="w3-container">
+    <h5><b>Gestão de Projetos e Fundamentos de Métodos Agile</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Agosto de 2025</h6>
+    <p>Curso oferecido pela Santander Academy.</p>
+  </div>
 
-            <div class="w3-container">
-              <h5 class="w3-opacity"><b>Instalação, configuração e suporte a sistemas operacionais, seus subsistemas e aplicativos</b></h5>
-              <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>O TEMPO TODO</h6>
-              <p>O Atendimento de primeiro nível em situação ligadas a hardware e software é parte integral da minha vida pessoal desde a infância;
-              Já montei vários computadores ao longo dos anos e fiz pesquisas aprofundadas sobre Peças e Preços. Todos os meus desktops pessoais foram contruídos e
-              manutenidos por mim, incluindo o atual. Porém nunca antes trabalhei nesse ramo, mas tenho uma ótima predisposição para aprender mais.
-              Tire suas dúvidas (Whatsapp): 62 981164329
-</p>
-            </div>
+  <div class="w3-container">
+    <h5><b>Inteligência Artificial/Prompts/Geração de Roteiros, Imagens, Códigos</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>O TEMPO TODO</h6>
+    <p>Além de uso para produção, utilizo muito para aprender.<br>
+      Uso muito ChatGPT Plus (para produção textual), Copilot (especialmente para geração de imagens), Gemini (especialmente para aprendizado).</p>
+  </div>
 
+  <div class="w3-container">
+    <h5><b>2ª Imersão <a target="_blank" href="https://www.alura.com.br">Alura</a> com Google Gemini</b></h5>
+    <p>2ª Imersão em Front-End promovida e feita pela Alura em Setembro de 2024. Desenvolvemos um projeto de escolha pessoal ao longo de 5 aulas + 2 extras + desafios com premiações. <br>
+      Tecnologias Utilizadas: HTLM, CSS, JavaScript, Luri(Alura IA), Github, Discord, Google Gemini <br>
+      (<a target="_blank" href="https://github.com/Loukingree/Alura-2024-Guia-de-Aprendizagem-Web-Interativo---HTML-CSS-e-JS">link do repositório com Github Pages ativo!</a>)</p>
+  </div>
 
-          <!-- EDUCACAO -->
-          <div class="w3-container w3-card w3-white">
+  <div class="w3-container">
+    <h5><b><a target="_blank" href="https://www.digitalhouse.com/br">Rockeseat</a> - Next Level Week (NLW Experts)</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de 2024 - <span class="w3-tag w3-teal w3-round">Atual</span></h6>
+    <p>NLW Expert | Evento gratuito de programação na prática promovido pela Rockeseat! <br>
+      Criamos, ao longo de 5 dias, um projeto Quiz personalizável com Prof Mayk Brito. <br>
+      (<a target="_blank" href="https://github.com/Loukingree/NLW-Experts-1-2024">link do repositório com Deploy!</a>)</p>
+    <hr>
+  </div>
+
+  <div class="w3-container">
+    <h5><b>1ª Imersão <a target="_blank" href="https://www.alura.com.br">Alura</a> Spotify</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de 2024</h6>
+    <p>1ª Imersão em Front-End promovida e feita pela Alura em Janeiro de 2024. Desenvolvemos uma réplica da
+      página inicial do Spotify® ao longo de 5 aulas + 2 extras + desafios . <br>
+      Tecnologias Utilizadas: HTLM CSS JavaScript Luri(Alura IA) <br>
+      Além dessas, React também foi apresentado, porém, não aprofundado. <br>
+      (<a target="_blank" href="https://github.com/Loukingree/Imersao-Alura-Spotify">link do repositório com Deploy!</a>)<strong>(Projeto em fase final de desenvolvimento)</strong></p>
+  </div>
+
+  <div class="w3-container">
+    <h5><b>Intensivão <a target="_blank" href="https://www.hashtagtreinamentos.com/todos-os-cursos">Hashtag</a> Javascript</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de 2024</h6>
+    <p>
+      Uma semana de aulas promovida pela <a target="_blank" href="https://www.linkedin.com/school/hashtag-treinamentos/">Hashtag Treinamentos</a>, onde o <a target="_blank" href="https://www.linkedin.com/in/daniel-porto-1b7900165/">Daniel Porto</a> nos ensinou a desenvolver 4 projetos: Um app de AudioBook, uma Réplica de uma
+      página da AppleStore, Um Cárdapio digital para um restaurante e o "HashZap". <a target="_blank" href="https://github.com/stars/Loukingree/lists/intensivao-js-hashtag-2024">(Link da Lista de Projetos!)</a></p>
+  </div>
+
+  <div class="w3-container">
+    <h5><b>Intensivão <a target="_blank" href="https://www.hashtagtreinamentos.com/todos-os-cursos">Hashtag</a> Python</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de 2024</h6>
+    <p>4 dias de aula, 4 projetos fantásticos. Aulas promovidas pelo professor <a target="_blank" href="https://www.linkedin.com/in/joão-paulo-rodrigues-de-lira-50664758/">João Lira</a>. <br>
+      <a target="_blank" href="https://github.com/stars/Loukingree/lists/intensivao-python-hashtag-2024">(Link dos meus projetos)</a></p>
+  </div>
+
+  <div class="w3-container">
+    <h5><b>Intensivão <a target="_blank" href="https://www.hashtagtreinamentos.com/todos-os-cursos">Hashtag</a> Power BI</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Dezembro de 2023</h6>
+    <p>Gostei muito das aulas de Power BI com o <a target="_blank" href="https://www.linkedin.com/in/alon-pinheiro-31bb9710a/">Alon Pinheiro</a> e cheguei a comprar o
+      acesso à Comunidade Impressionadora. <br> <a target="_blank" href="https://sites.google.com/view/portfoliolouysantana/início">(Link da Lista de Dashboards!)</a></p>
+  </div>
+
+  <div class="w3-container">
+    <h5><b><a target="_blank" href="https://www.lojasrenner.com.br">Renner S.A.</a></b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2019</h6>
+    <p>Assistente de Loja (eEStágio de 4 meses).</p>
+  </div>
+
+  <div class="w3-container">
+    <h5><b>Atendimento ao Cliente</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Várias Experiências</h6>
+    <p>Já trabalhei em supermercados, shopping center, com pintura e restauração (em França),<br>
+      e, nesse sentido, sempre consigo me conectar com o cliente criando uma relação de respeito mútuo e empatia.<br>
+      de forma que eu possa atendê-lo plenamente.</p>
+  </div>
+
+  <div class="w3-container">
+    <h5><b>Instalação, configuração e suporte a sistemas operacionais, seus subsistemas e aplicativos</b></h5>
+    <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>O TEMPO TODO</h6>
+    <p>O Atendimento de primeiro nível em situação ligadas a hardware e software é parte integral da minha vida pessoal desde a infância;
+      Já montei vários computadores ao longo dos anos e fiz pesquisas aprofundadas sobre Peças e Preços. Todos os meus desktops pessoais foram contruídos e
+      manutenidos por mim, incluindo o atual. Porém nunca antes trabalhei nesse ramo, mas tenho uma ótima predisposição para aprender mais.
+      Tire suas dúvidas (Whatsapp): 62 981164329
+    </p>
+  </div>
+          </div>
+          <div class="w3-container w3-card w3-white card-padding">
             <h2 class="w3-text-grey w3-padding-16">
-              <i class="fa fa-graduation-cap fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Educação
+              <i class="fa fa-graduation-cap fa-fw w3-margin-right w3-xxlarge"></i>Educação
             </h2>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://descomplica.com.br/faculdade/">Descomplica Faculdade Digital 5 Período</a></b></h5>
+              <h5><b><a target="_blank" href="https://descomplica.com.br/faculdade/">Descomplica Faculdade Digital 5 Período</a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><span class="w3-tag w3-teal w3-round">2024 - 2026 (2,5 anos)</span></h6>
               <p>(Graduação/Tecnólogo) Análise e Desenvolvimento de Sistemas </p>
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://app.santanderopenacademy.com">Santander Academy</a></b></h5>
+              <h5><b><a target="_blank" href="https://app.santanderopenacademy.com">Santander Academy</a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><span class="w3-tag w3-teal w3-round">Atual</span></h6>
               <p>
                 Plataforma de cursos gratuitos oferecidos pelo Banco espanhol Santander. Comecei nessa plataforma há pouco tempo e há vários cursos disponíveis gratuitamente, dos quais completei "Gestão de Projetos
@@ -385,12 +531,12 @@
               </p>
               <ul>
                 <li><a target="_blank" href="https://www.linkedin.com/posts/louysantana_estou-estudando-com-o-banco-santander-activity-7366918263286546434-cGMA?utm_source=share&utm_medium=member_desktop&rcm=ACoAACKJKCoBq_oiAJ_xbpqvEx4FY0FQr1ss-Y0">Gestão de Projetos
-                e Fundamentos de Métodos Agile</a></li>
+                  e Fundamentos de Métodos Agile</a></li>
               </ul>
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.dio.me">Digital Innovation One (DIO)</a></b></h5>
+              <h5><b><a target="_blank" href="https://www.dio.me">Digital Innovation One (DIO)</a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><span class="w3-tag w3-teal w3-round">Atual</span></h6>
               <p>
                 Maior plataforma de educação aberta em TI da América Latina, com mais 1 milhão de usuários.
@@ -405,45 +551,49 @@
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.alura.com.br">Alura</a></b></h5>
+              <h5><b><a target="_blank" href="https://www.alura.com.br">Alura</a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de <span class="w3-tag w3-teal w3-round">2024</span></h6>
               <p> </p>
               <ul>
                 <li>2ª Imersão Alura Front-End com Google Gemini 2024 (~8h)</a></li>
+              </ul>
               <hr>
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.rocketseat.com.br">Rockeseat</a></b> </h5>
+              <h5><b><a target="_blank" href="https://www.rocketseat.com.br">Rockeseat</a></b> </h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de <span class="w3-tag w3-teal w3-round">2024</span></h6>
               <p> </p>
               <ul>
                 <li><a href="https://app.rocketseat.com.br/certificates/24969ff0-38f3-439a-8a5d-fc3d9f418d70" target="_blank">Certificado: NLW Expert trilha de HTML, CSS e Javascript (5 horas)</a></li>
+              </ul>
               <hr>
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.alura.com.br">Alura</a></b></h5>
+              <h5><b><a target="_blank" href="https://www.alura.com.br">Alura</a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Janeiro de <span class="w3-tag w3-teal w3-round">2024</span></h6>
               <p> </p>
               <ul>
                 <li><a href="https://cursos.alura.com.br/immersion/certificate/055cb463-90d7-4e82-b304-3f84699a3a18" target="_blank">1ª Imersão Alura Front-End (~8h)</a></li>
+              </ul>
               <hr>
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.hashtagtreinamentos.com/todos-os-cursos">Hashtag Treinamentos</a></b></h5>
+              <h5><b><a target="_blank" href="https://www.hashtagtreinamentos.com/todos-os-cursos">Hashtag Treinamentos</a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><span class="w3-tag w3-teal w3-round">2023 - 2024</span></h6>
               <p> </p>
               <ul>
                 <li><a href="https://www.linkedin.com/posts/louysantana_hashtagtreinamentos-activity-7160673192305405952-FF0D?utm_source=share&utm_medium=member_desktop" target="_blank">Intensivão JavaScript (8h)</a></li>
                 <li><a href="https://www.linkedin.com/posts/louysantana_certificado-intensiv%C3%A3o-python-com-o-lira-activity-7163649835097690113-vmms?utm_source=share&utm_medium=member_desktop" target="_blank">Intensivão Python (8h)</a></li>
                 <li><a href="https://www.linkedin.com/posts/louysantana_hashtagtreinamentos-cursos-powerbi-activity-7145576784690937856-zBVV?utm_source=share&utm_medium=member_desktop" target="_blank">Intensivão Power BI (8h)</a></li>
-                <hr>
+              </ul>
+              <hr>
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://ebaconline.com.br">EBAC</a> + <a target="_blank" href="https://startcapgemini.com.br">CapGemini START</a></b></h5>
+              <h5><b><a target="_blank" href="https://ebaconline.com.br">EBAC</a> + <a target="_blank" href="https://startcapgemini.com.br">CapGemini START</a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><span class="w3-tag w3-teal w3-round">2023</span></h6>
               <p>
                 Lógica de Programação: <a target="_blank" href="https://ebaconline.com.br/introducao-a-programacao">EBAC Introdução</a>, <a target="_blank" href="https://startcapgemini.com.br">CapGemini START</a>.
@@ -451,144 +601,38 @@
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.udemy.com/user/andreiacono/">Udemy (Prof Andre Iacono)</a></b></h5>
+              <h5><b><a target="_blank" href="https://www.udemy.com/user/andreiacono/">Udemy (Prof Andre Iacono)</a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Dezembro de <span class="w3-tag w3-teal w3-round">2023</span></h6>
               <p> </p>
               <ul>
                 <li><a href="https://www.udemy.com/certificate/UC-63d34e3a-c8c8-45a3-9bb6-f0895ea9e07e/" target="_blank">Microsoft Power BI + Projetos Reais</a></li>
+              </ul>
               <hr>
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.ef.com.br">EF Standard English Test (EF SET) </a></b></h5>
+              <h5><b><a target="_blank" href="https://www.ef.com.br">EF Standard English Test (EF SET) </a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Dezembro de <span class="w3-tag w3-teal w3-round">2023</span></h6>
               <p> </p>
               <ul>
                 <li><a href="https://cert.efset.org/cTJdDb" target="_blank">EF SET English 77/100 Certificate™</a></li>
+              </ul>
               <hr>
             </div>
 
             <div class="w3-container">
-              <h5 class="w3-opacity"><b><a target="_blank" href="https://www.ifg.edu.br">Instituto Federal de Goiás (Campus Goiânia)</a></b></h5>
+              <h5><b><a target="_blank" href="https://www.ifg.edu.br">Instituto Federal de Goiás (Campus Goiânia)</a></b></h5>
               <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2015-2018</h6>
               <p>Ensino Médio</p>
             </div>
           </div>
 
-
-          <!-- PROJETOS -->
-          <div class="w3-container w3-card w3-white w3-margin-bottom">
-            <h2 class="w3-text-grey w3-padding-16">
-              <i class="fa fa-git fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Melhores Projetos!
-            </h2>
-
-            <div class="w3-container">
-              <h6 class="w3-text-teal">
-                <i class="fa fa-github fa-fw w3-margin-right"></i>
-                <a href="https://github.com/Loukingree/Projeto-DIO-CV" target="_blank">Link do Currículo no github</a>
-              </h6>
-              <p><strong>Tecnologias utilizadas: </strong><br>
-                HTML5 <br>
-                VSCode <br>
-                Git/Github Desktop (Versionamento) <br>
-                GitHub <br>
-                </p>
-              <hr>
-            </div>
-
-            <div class="w3-container">
-              <h6 class="w3-text-teal">
-                <i class="fa fa-github fa-fw w3-margin-right"></i>
-                <a href="https://loukingree.github.io/NLW-Experts-1-2024/" target="_blank">Projeto Quiz</a>
-              </h6>
-              <p><strong>Tecnologias utilizadas: </strong><br>
-                HTML5 <br>
-                CSS <br>
-                JavaScript <br>
-                GitHub <br>
-                <a target="_blank" href="https://www.fronteditor.dev">Front-End Editor</a> (by mayk Brito, Diego Fernandes e Joseph Oliveira)
-                </p>
-              <hr>
-            </div>
-
-            <div class="w3-container">
-              <h6 class="w3-text-teal">
-                <i class="fa fa-github fa-fw w3-margin-right"></i>
-                <a href="https://loukingree.github.io/Imersao-Alura-Spotify/" target="_blank">Projeto Spotify</a>
-              </h6>
-              <p><strong>Tecnologias utilizadas: </strong><br>
-                HTML5 <br>
-                CSS <br>
-                JavaScript <br>
-                NodeJs <br>
-                GitHub <br>
-                Luri (Ia da Alura)
-              </p>
-              <hr>
-            </div>
-
-            <div class="w3-container">
-              <h6 class="w3-text-teal">
-                <i class="fa fa-github fa-fw w3-margin-right"></i>
-                <a href="https://github.com/stars/Loukingree/lists/intensivao-python-hashtag-2024" target="_blank">Projetos de Python</a>
-              </h6>
-              <p><strong>Tecnologias utilizadas: </strong><br>
-                VSCode <br>
-                Linguagem Python <br>
-                Jupyter Notebook <br>
-                <a target="_blank" href="https://www.anaconda.com">Anaconda 3 </a>(python 3.11) <br>
-                <a target="_blank" href="https://pandas.pydata.org">Pandas</a> <br>
-                Modelos de IA (scikit-learn): <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html">KNeighbors_Classifier</a>,
-                <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">RandomForestClassifier</a> <br>
-                <a target="_blank" href="https://pyautogui.readthedocs.io/en/latest/">PyAutoGui</a> <br>
-                GitHub <br>
-                </p>
-              <hr>
-            </div>
-
-
-            <div class="w3-container">
-              <h6 class="w3-text-teal">
-                <i class="fa fa-github fa-fw w3-margin-right"></i>
-                <a href="https://loukingree.github.io/AudioBook-Hashtag-JS-aula-1/" target="_blank">Projeto Audio Livros</a>
-              </h6>
-              <p><strong>Tecnologias utilizadas: </strong><br>
-                VSCode <br>
-                HTML5 <br>
-                CSS <br>
-                JavaScript <br>
-                <a target="_blank" href="https://vitejs.dev/guide/">Vite</a> + <a target="_blank" href="https://react.dev">React</a> (Backend Rápido) <br>
-                NodeJs <br>
-                GitHub <br>
-              </p>
-              <hr>
-            </div>
-
-            <div class="w3-container">
-              <h6 class="w3-text-teal">
-                <i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer2" viewBox="0 0 16 16">
-                  <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 orbiting 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z"/>
-                  <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3"/>
-                </svg></i> -->
-                <a href="https://sites.google.com/view/portfoliolouysantana/início" target="_blank">Portfólio Power BI</a>
-              </h6>
-              <hr>
-            </div>
-
-          </div>
-
-          <!-- End Right Column -->
         </div>
 
-        <!-- End Grid -->
       </div>
 
-      <!-- End Page Container -->
-    </div>
 
-
-    <!-- REDES SOCIAIS -->
-    <footer class="w3-container w3-teal w3-center w3-margin-top">
+    <footer class="w3-container w3-center w3-margin-top footer-dark">
       <p>Minhas Redes Sociais</p>
       <a href="https://github.com/Loukingree" target="_blank"><i class="fa fa-github w3-hover-opacity"></i></a>
       <a href="https://www.linkedin.com/in/louysantana/" target="_blank"><i class="fa fa-linkedin w3-hover-opacity"></i></a>
@@ -597,5 +641,5 @@
     </footer>
 
   </body>
-
+  
 </html>
