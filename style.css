@@ -179,7 +179,7 @@ h6 {
 
 .w3-twothird p {
   line-height: 1.8; /* Aumenta o espaçamento entre linhas (leitura fácil) */
-  color: #000000;
+  color: #494949;
   margin-bottom: 15px;
   font-size: 15px;
 }
@@ -313,3 +313,4 @@ h6 {
     background-position: 0% 50%;
   }
 }
+
