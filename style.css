@@ -10,93 +10,12 @@ h6 {
   font-family: "Roboto", sans-serif;
 }
 
-/* --- BOTÃO DE MÚSICA (Canto Inferior Direito) --- */
-.music-float {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #000050; /* Azul Marinho */
-  color: #2bfdbe; /* Neon Mint */
-  border: 2px solid #2bfdbe;
-  padding: 10px 15px;
-  border-radius: 30px;
-  cursor: pointer;
-  z-index: 1000;
-  font-weight: bold;
-  font-size: 13px;
-  transition: all 0.3s ease;
-  opacity: 0.7; /* Meio transparente quando parado */
-  display: flex;
-  align-items: center;
-  gap: 8px; /* Espaço entre icone e texto */
-}
-
-.music-float:hover {
-  background-color: #2bfdbe;
-  color: #000050;
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-/* --- NOVO CTA FIXO (COM POSICIONAMENTO CORRIGIDO) --- */
-.cta-live {
-  position: fixed;
-  top: 15px;
-  right: 20px; /* Posição padrão para telas menores que 1440px */
-  padding: 8px 15px;
-  background-color: #ff2c8b;
-  color: white;
-  border-radius: 8px;
-  font-weight: bold;
-  text-decoration: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  transition: background-color 0.3s;
-  font-size: 14px;
-  display: none;
-}
-
-/* * CORREÇÃO PARA TELAS GRANDES (CONTENT = 1400px)
-      * A partir de 1440px de largura, o botão será fixado na borda direita do currículo.
-      */
-@media (min-width: 1440px) {
-  .cta-live {
-    /* 50vw (centro da tela) - 700px (metade do container de 1400px) + 20px (respiro) */
-    right: calc(50vw - 700px + 20px);
-  }
-}
-
-/* Mantém o botão visível em telas >= 1000px */
-@media (min-width: 1000px) {
-  .cta-live {
-    display: block;
-  }
-}
-
-.cta-live:hover {
-  background-color: #a855f7;
-  color: white;
-}
-
-/* Animação do Fundo da Sidebar */
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 /* --- SIDEBAR (COLUNA ESQUERDA) --- */
 .left-sidebar {
   /* Gradiente sutil e moderno (Preto -> Azul Profundo -> Roxo Escuro) */
-  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #100e17);
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #2b2b53, #100e17);
   background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite; /* Animação lenta e elegante */
+  animation: gradientBG 10s ease infinite; /* Animação lenta e elegante */
 
   color: #e0e0e0 !important; /* Texto off-white (menos agressivo que branco puro) */
   padding-bottom: 30px;
@@ -238,7 +157,7 @@ h6 {
 }
 
 .w3-twothird h2 {
-  color: #1a1a2e; /* <--- MUDE AQUI A COR DE "EXPERIÊNCIAS" */
+  color: #2C2B57; /* <--- MUDE AQUI A COR DE "EXPERIÊNCIAS" */
   letter-spacing: -0.5px;
   border-bottom: none !important; /* Linha de destaque abaixo do título */
   display: inline-block;
@@ -247,7 +166,7 @@ h6 {
 }
 
 .w3-twothird h2 i {
-  color: #000050 !important;
+  color: #2C2B57 !important;
 } /* Ícone do título com cor contrastante, use !important após a cor para aplicar */
 
 .w3-twothird h5 {
@@ -272,7 +191,7 @@ h6 {
   font-size: 14px;
 }
 .w3-tag.w3-teal {
-  background-color: #a855f7;
+  background-color: #0083cb !important ;
   font-size: 16px;
   letter-spacing: 0.5px;
 }
@@ -312,4 +231,85 @@ h6 {
 }
 .footer-dark i:hover {
   color: #a855f7 !important;
+}
+
+/* --- BOTÃO DE MÚSICA (Canto Inferior Direito) --- */
+.music-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #000050; /* Azul Marinho */
+  color: #2bfdbe; /* Neon Mint */
+  border: 2px solid #2bfdbe;
+  padding: 10px 15px;
+  border-radius: 30px;
+  cursor: pointer;
+  z-index: 1000;
+  font-weight: bold;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  opacity: 0.7; /* Meio transparente quando parado */
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espaço entre icone e texto */
+}
+
+.music-float:hover {
+  background-color: #2bfdbe;
+  color: #000050;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* --- NOVO CTA FIXO (COM POSICIONAMENTO CORRIGIDO) --- */
+.cta-live {
+  position: fixed;
+  top: 15px;
+  right: 20px; /* Posição padrão para telas menores que 1440px */
+  padding: 8px 15px;
+  background-color: #ff2c8b;
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  display: none;
+}
+
+/* * CORREÇÃO PARA TELAS GRANDES (CONTENT = 1400px)
+      * A partir de 1440px de largura, o botão será fixado na borda direita do currículo.
+      */
+@media (min-width: 1440px) {
+  .cta-live {
+    /* 50vw (centro da tela) - 700px (metade do container de 1400px) + 20px (respiro) */
+    right: calc(50vw - 700px + 20px);
+  }
+}
+
+/* Mantém o botão visível em telas >= 1000px */
+@media (min-width: 1000px) {
+  .cta-live {
+    display: block;
+  }
+}
+
+.cta-live:hover {
+  background-color: #a855f7;
+  color: white;
+}
+
+/* Animação do Fundo da Sidebar */
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
